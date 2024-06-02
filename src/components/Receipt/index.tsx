@@ -4,8 +4,16 @@ import texture from "@/assets/img/wrinkled-paper-texture.jpg";
 import barcode from "@/assets/img/barcode.png";
 import Image from "next/image";
 import { cn, merchant_copy, getFormattedDate } from "@/lib/utils";
+import Item from "./Item";
+import { useEffect, useState } from "react";
 
 export default function Receipt() {
+  const [hostname, setHostname] = useState<string>("");
+
+  useEffect(() => {
+    setHostname(window.location.hostname);
+  }, []);
+
   return (
     <div
       className="max-w-md p-5 w-full select-none"
@@ -33,21 +41,9 @@ export default function Receipt() {
             </tr>
           </thead>
           <tbody>
-            {/* Example table row:
-             <tr>
-                <td className="text-left align-top">01</td>
-                <td className="text-left align-top">COLLAPSED IADSFHDSOU FNDIFND SUNBEAMS</td>
-                <td className="text-right align-top">$30.000.000</td>
-                <td className="text-right align-top">20</td>
-            </tr> */}
-            <tr>
-              <td className="text-left align-top">01</td>
-              <td className="text-left align-top">
-                COLLAPSED IADSFHDSOU FNDIFND SUNBEAMS
-              </td>
-              <td className="text-right align-top">$30.000.000</td>
-              <td className="text-right align-top">20</td>
-            </tr>
+            {/* - BEGIN - ITEM ROWS */}
+            <Item qty={1} name={"a"} price={1} amt={1} />
+            {/* - END - ITEM ROWS */}
             <tr className="border-t-2 border-black">
               <td colSpan={2} className="text-left">
                 ITEM COUNT:
@@ -74,7 +70,7 @@ export default function Receipt() {
         <div className="flex flex-col items-center">
           <p className="py-4">REMEMBER TO PAY YOUR DEBTS!</p>
           <Image src={barcode} alt="barcode" className="w-2/3" />
-          <p>{window.location.hostname}</p>
+          <p>{hostname}</p>
         </div>
       </div>
     </div>
