@@ -13,28 +13,6 @@ export async function DELETE(request: NextRequest, { params }: Params) {
       },
     });
 
-    // Retrieve all items with IDs greater than the deleted ID
-    const itemsToUpdate = await prisma.receipt.findMany({
-      where: {
-        id: {
-          gt: Number(params.id),
-        },
-      },
-    });
-
-    // Update the IDs of the remaining items
-    // This is to keep continuity of IDs (1, 2, 3, ...)
-    await Promise.all(
-      itemsToUpdate.map(async (item) => {
-        return prisma.receipt.update({
-          where: { id: item.id },
-          data: {
-            id: item.id - 1,
-          },
-        });
-      })
-    );
-
     return NextResponse.json(deletedItem, { status: 200 });
   } catch (error) {
     return NextResponse.json(

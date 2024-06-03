@@ -67,7 +67,7 @@ export default function Receipt() {
         <table className="w-full my-3 leading-none">
           <thead>
             <tr className="border-t-2 border-b-2 border-black">
-              <th className="text-left">ID</th>
+              <th className="text-left">REF</th>
               <th className="text-left w-1/2">ITEM</th>
               <th className="text-right">PRICE</th>
               <th className="text-right">AMT</th>
