@@ -8,6 +8,7 @@ import Item from "./Item";
 import NewItem from "./NewItem";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatters } from "@/lib/utils";
 
 interface Item {
   id: number;
@@ -16,10 +17,16 @@ interface Item {
   amount: number;
 }
 
+interface Summary {
+  totalAmount: number;
+  totalPrice: number;
+}
+
 export default function Receipt() {
   const [hostname, setHostname] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [items, setItems] = useState<Item[] | null>(null);
+  const [summary, setSummary] = useState<Summary | null>(null);
 
   // Refresh on CRUD operations (this behaves as a signal, not a switch)
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -35,14 +42,20 @@ export default function Receipt() {
   useEffect(() => {
     setLoading(true);
 
-    async function loadItems() {
-      const res = await fetch("/api/receipt");
-      const data = await res.json();
+    async function loadData() {
+      var res, data;
+      res = await fetch("/api/receipt");
+      data = await res.json();
       setItems(data);
+
+      res = await fetch("/api/receipt/summary");
+      data = await res.json();
+      setSummary(data);
+
       setLoading(false);
     }
 
-    loadItems();
+    loadData();
   }, [refresh]);
 
   return loading ? (
@@ -74,7 +87,6 @@ export default function Receipt() {
             </tr>
           </thead>
           <tbody>
-            {/* - BEGIN - ITEM ROWS */}
             {items?.map((item) => (
               <Item
                 key={item.id}
@@ -85,14 +97,13 @@ export default function Receipt() {
                 signalRefresh={toggleRefresh}
               />
             ))}
-            {/* - END - ITEM ROWS */}
             <NewItem signalRefresh={toggleRefresh} />
             <tr className="border-t-2 border-black">
               <td colSpan={2} className="text-left">
                 ITEM COUNT:
               </td>
               <td colSpan={2} className="text-right">
-                10
+                {summary?.totalAmount}
               </td>
             </tr>
             <tr className="border-b-2 border-black">
@@ -100,7 +111,7 @@ export default function Receipt() {
                 TOTAL:
               </td>
               <td colSpan={2} className="text-right">
-                $10
+                {formatters.PRICE(summary?.totalPrice!)}
               </td>
             </tr>
           </tbody>

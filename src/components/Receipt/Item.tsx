@@ -24,6 +24,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
+import { formatters } from "@/lib/utils";
 
 enum ActionButton {
   DELETE,
@@ -35,17 +36,6 @@ const formSchema = z.object({
   price: z.coerce.number().gte(0),
   amt: z.coerce.number().gte(0),
 });
-
-const formatters = {
-  DESCRIPTION: (description: string) => description.toUpperCase(),
-  PRICE: (price: number) =>
-    price.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }),
-};
 
 interface ItemProps {
   id: number;

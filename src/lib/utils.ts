@@ -39,6 +39,17 @@ export function getFormattedDate() {
   return `${day}, ${month} ${date}, ${year}`;
 }
 
+export const formatters = {
+  DESCRIPTION: (description: string) => description.toUpperCase(),
+  PRICE: (price: number) =>
+    price.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }),
+};
+
 /* FONTS */
 import { Dancing_Script } from "next/font/google";
 import localFont from "next/font/local";
