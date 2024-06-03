@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(newItem, { status: 200 });
+    return NextResponse.json(newItem, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { message: "Error trying to create a new item", error: error },
