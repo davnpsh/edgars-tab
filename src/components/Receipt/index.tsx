@@ -86,7 +86,7 @@ export default function Receipt() {
               />
             ))}
             {/* - END - ITEM ROWS */}
-            <NewItem />
+            <NewItem signalRefresh={toggleRefresh} />
             <tr className="border-t-2 border-black">
               <td colSpan={2} className="text-left">
                 ITEM COUNT:

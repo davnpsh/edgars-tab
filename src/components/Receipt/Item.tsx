@@ -19,10 +19,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
 
 enum ActionButton {
   DELETE,
@@ -64,6 +65,7 @@ export default function Item({
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [pressedButton, setPressedButton] = useState<ActionButton | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
 
   // Prevent closing of Dialog when loading
   function onDialogOpenChange() {
@@ -97,11 +99,15 @@ export default function Item({
         }),
       });
 
-      if (res.ok) {
-        signalRefresh();
-      }
+      signalRefresh();
     } catch (error) {
       console.error("Error trying to update item: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Error trying to update item.",
+        duration: 2000,
+      });
     }
 
     setLoading(false);
@@ -109,10 +115,30 @@ export default function Item({
     setPressedButton(null);
   }
 
-  function onDelete() {
+  async function onDelete() {
     setLoading(true);
     // Mark as pressed button
     setPressedButton(ActionButton.DELETE);
+
+    try {
+      const res = await fetch(`/api/receipt/item/${id}`, {
+        method: "DELETE",
+      });
+
+      signalRefresh();
+    } catch (error) {
+      console.error("Error trying to delete item: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Error trying to delete item.",
+        duration: 2000,
+      });
+    }
+
+    setLoading(false);
+    // Release
+    setPressedButton(null);
   }
 
   return (

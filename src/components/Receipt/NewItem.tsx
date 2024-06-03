@@ -24,6 +24,7 @@ import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   description: z.string().min(2).max(50),
@@ -31,9 +32,14 @@ const formSchema = z.object({
   amt: z.coerce.number().gte(0),
 });
 
-export default function NewItem() {
+interface NewItemProps {
+  signalRefresh: () => void;
+}
+
+export default function NewItem({ signalRefresh }: NewItemProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
 
   // Prevent closing of Dialog when loading
   function onDialogOpenChange() {
@@ -52,8 +58,31 @@ export default function NewItem() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+
+    try {
+      const res = await fetch("/api/receipt/", {
+        method: "POST",
+        body: JSON.stringify({
+          description: values.description,
+          price: values.price,
+          amount: values.amt,
+        }),
+      });
+
+      signalRefresh();
+    } catch (error) {
+      console.error("Error trying to create item: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Error trying to create item.",
+        duration: 2000,
+      });
+    }
+
+    setLoading(false);
   }
 
   return (
