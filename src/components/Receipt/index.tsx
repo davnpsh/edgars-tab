@@ -34,15 +34,15 @@ export default function Receipt() {
         <table className="w-full my-3 leading-none">
           <thead>
             <tr className="border-t-2 border-b-2 border-black">
-              <th className="text-left">QTY</th>
+              <th className="text-left">ID</th>
               <th className="text-left w-1/2">ITEM</th>
-              <th className="text-right">COST</th>
+              <th className="text-right">PRICE</th>
               <th className="text-right">AMT</th>
             </tr>
           </thead>
           <tbody>
             {/* - BEGIN - ITEM ROWS */}
-            <Item qty={1} name={"a"} price={1} amt={1} />
+            <Item id={1} name={"a"} price={1} amt={1} />
             {/* - END - ITEM ROWS */}
             <tr className="border-t-2 border-black">
               <td colSpan={2} className="text-left">

@@ -36,13 +36,13 @@ const formSchema = z.object({
 });
 
 interface ItemProps {
-  qty: number;
+  id: number;
   name: string;
   price: number;
   amt: number;
 }
 
-export default function Item({ qty, name, price, amt }: ItemProps) {
+export default function Item({ id, name, price, amt }: ItemProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [pressedButton, setPressedButton] = useState<ActionButton | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -80,7 +80,7 @@ export default function Item({ qty, name, price, amt }: ItemProps) {
     <Dialog open={dialogOpen} onOpenChange={onDialogOpenChange}>
       <DialogTrigger asChild>
         <tr className="hover:bg-yellow-300 cursor-pointer">
-          <td className="text-left align-top">{qty}</td>
+          <td className="text-left align-top">{id}</td>
           <td className="text-left align-top">{name}</td>
           <td className="text-right align-top">${price}</td>
           <td className="text-right align-top">{amt}</td>
