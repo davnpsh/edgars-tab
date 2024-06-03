@@ -6,16 +6,40 @@ import Image from "next/image";
 import { cn, merchant_copy, getFormattedDate } from "@/lib/utils";
 import Item from "./Item";
 import NewItem from "./NewItem";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+
+interface Item {
+  id: number;
+  description: string;
+  price: number;
+  amount: number;
+}
 
 export default function Receipt() {
   const [hostname, setHostname] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [items, setItems] = useState<Item[] | null>(null);
 
   useEffect(() => {
     setHostname(window.location.hostname);
   }, []);
 
-  return (
+  // Fetch items of the receipt
+  useEffect(() => {
+    async function loadItems() {
+      const res = await fetch("/api/receipt");
+      const data = await res.json();
+      setItems(data);
+      setLoading(false);
+    }
+
+    loadItems();
+  }, []);
+
+  return loading ? (
+    <Loader2 className="mr-2 h-16 w-16 animate-spin" />
+  ) : (
     <div
       className="max-w-md p-5 w-full select-none"
       style={{
@@ -43,6 +67,15 @@ export default function Receipt() {
           </thead>
           <tbody>
             {/* - BEGIN - ITEM ROWS */}
+            {items?.map((item) => (
+              <Item
+                key={item.id}
+                id={item.id}
+                description={item.description}
+                price={item.price}
+                amt={item.amount}
+              />
+            ))}
             {/* - END - ITEM ROWS */}
             <NewItem />
             <tr className="border-t-2 border-black">
