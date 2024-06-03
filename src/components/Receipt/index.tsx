@@ -5,6 +5,7 @@ import barcode from "@/assets/img/barcode.png";
 import Image from "next/image";
 import { cn, merchant_copy, getFormattedDate } from "@/lib/utils";
 import Item from "./Item";
+import NewItem from "./NewItem";
 import { useEffect, useState } from "react";
 
 export default function Receipt() {
@@ -42,8 +43,8 @@ export default function Receipt() {
           </thead>
           <tbody>
             {/* - BEGIN - ITEM ROWS */}
-            <Item id={1} name={"a"} price={1} amt={1} />
             {/* - END - ITEM ROWS */}
+            <NewItem />
             <tr className="border-t-2 border-black">
               <td colSpan={2} className="text-left">
                 ITEM COUNT:
