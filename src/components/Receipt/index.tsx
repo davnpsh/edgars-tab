@@ -22,7 +22,11 @@ interface Summary {
   totalPrice: number;
 }
 
-export default function Receipt() {
+interface ReceiptProps {
+  printing: boolean;
+}
+
+export default function Receipt({ printing }: ReceiptProps) {
   const [hostname, setHostname] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [items, setItems] = useState<Item[] | null>(null);
@@ -97,7 +101,7 @@ export default function Receipt() {
                 signalRefresh={toggleRefresh}
               />
             ))}
-            <NewItem signalRefresh={toggleRefresh} />
+            {printing ? <></> : <NewItem signalRefresh={toggleRefresh} />}
             <tr className="border-t-2 border-black">
               <td colSpan={2} className="text-left">
                 ITEM COUNT:

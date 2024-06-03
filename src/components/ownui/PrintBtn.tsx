@@ -11,9 +11,14 @@ import { Loader2 } from "lucide-react";
 interface PrintBtnProps {
   className?: ClassValue;
   ReceiptRef: RefObject<HTMLDivElement>;
+  togglePrinting: () => void;
 }
 
-export function PrintBtn({ className, ReceiptRef }: PrintBtnProps) {
+export function PrintBtn({
+  className,
+  ReceiptRef,
+  togglePrinting,
+}: PrintBtnProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const reactToPrintContent = useCallback(() => {
@@ -27,7 +32,7 @@ export function PrintBtn({ className, ReceiptRef }: PrintBtnProps) {
         className={cn([className, "group w-16 h-16 rounded-full"])}
       >
         {loading ? (
-          <Loader2 className="animate-spin"/>
+          <Loader2 className="animate-spin" />
         ) : (
           <Printer className="group-hover:scale-125 transition-transform" />
         )}
@@ -35,12 +40,20 @@ export function PrintBtn({ className, ReceiptRef }: PrintBtnProps) {
     );
   }
 
-  const handleBeforePrint = useCallback(() => {
-    setLoading(true);
+  const handleBeforeGetContent = useCallback(() => {
+    return new Promise<void>((resolve) => {
+      setLoading(true);
+      togglePrinting();
+
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
   }, []);
 
   const handleAfterPrint = useCallback(() => {
     setLoading(false);
+    togglePrinting();
   }, []);
 
   return (
@@ -48,8 +61,9 @@ export function PrintBtn({ className, ReceiptRef }: PrintBtnProps) {
       content={reactToPrintContent}
       trigger={reactToPrintTrigger}
       documentTitle="Receipt"
-      onBeforePrint={handleBeforePrint}
+      onBeforeGetContent={handleBeforeGetContent}
       onAfterPrint={handleAfterPrint}
+      removeAfterPrint
     />
   );
 }
