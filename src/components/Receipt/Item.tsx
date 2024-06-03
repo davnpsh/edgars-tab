@@ -25,8 +25,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 enum ActionButton {
-  Delete,
-  Submit,
+  DELETE,
+  SUBMIT,
 }
 
 const formSchema = z.object({
@@ -34,6 +34,17 @@ const formSchema = z.object({
   price: z.coerce.number().gte(0),
   amt: z.coerce.number().gte(0),
 });
+
+const formatters = {
+  DESCRIPTION: (description: string) => description.toUpperCase(),
+  PRICE: (price: number) =>
+    price.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }),
+};
 
 interface ItemProps {
   id: number;
@@ -67,13 +78,13 @@ export default function Item({ id, description, price, amt }: ItemProps) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     // Mark as pressed button
-    setPressedButton(ActionButton.Submit);
+    setPressedButton(ActionButton.SUBMIT);
   }
 
   function onDelete() {
     setLoading(true);
     // Mark as pressed button
-    setPressedButton(ActionButton.Delete);
+    setPressedButton(ActionButton.DELETE);
   }
 
   return (
@@ -81,8 +92,10 @@ export default function Item({ id, description, price, amt }: ItemProps) {
       <DialogTrigger asChild>
         <tr className="hover:bg-yellow-300 cursor-pointer">
           <td className="text-left align-top">{id}</td>
-          <td className="text-left align-top">{description}</td>
-          <td className="text-right align-top">${price}</td>
+          <td className="text-left align-top">
+            {formatters.DESCRIPTION(description)}
+          </td>
+          <td className="text-right align-top">{formatters.PRICE(price)}</td>
           <td className="text-right align-top">{amt}</td>
         </tr>
       </DialogTrigger>
@@ -150,13 +163,13 @@ export default function Item({ id, description, price, amt }: ItemProps) {
                 onClick={() => onDelete()}
                 disabled={loading && true}
               >
-                {pressedButton === ActionButton.Delete && (
+                {pressedButton === ActionButton.DELETE && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Delete
               </Button>
               <Button type="submit" disabled={loading && true}>
-                {pressedButton === ActionButton.Submit && (
+                {pressedButton === ActionButton.SUBMIT && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Submit
