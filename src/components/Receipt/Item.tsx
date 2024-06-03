@@ -30,19 +30,19 @@ enum ActionButton {
 }
 
 const formSchema = z.object({
-  name: z.string().min(2).max(50),
+  description: z.string().min(2).max(50),
   price: z.coerce.number().gte(0),
   amt: z.coerce.number().gte(0),
 });
 
 interface ItemProps {
   id: number;
-  name: string;
+  description: string;
   price: number;
   amt: number;
 }
 
-export default function Item({ id, name, price, amt }: ItemProps) {
+export default function Item({ id, description, price, amt }: ItemProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [pressedButton, setPressedButton] = useState<ActionButton | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,7 +58,7 @@ export default function Item({ id, name, price, amt }: ItemProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name,
+      description: description,
       price: price,
       amt: amt,
     },
@@ -81,7 +81,7 @@ export default function Item({ id, name, price, amt }: ItemProps) {
       <DialogTrigger asChild>
         <tr className="hover:bg-yellow-300 cursor-pointer">
           <td className="text-left align-top">{id}</td>
-          <td className="text-left align-top">{name}</td>
+          <td className="text-left align-top">{description}</td>
           <td className="text-right align-top">${price}</td>
           <td className="text-right align-top">{amt}</td>
         </tr>
@@ -96,7 +96,7 @@ export default function Item({ id, name, price, amt }: ItemProps) {
             <div className="flex flex-row gap-2">
               <FormField
                 control={form.control}
-                name="name"
+                name="description"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel>Name</FormLabel>

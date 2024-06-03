@@ -16,11 +16,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, price, amount } = await request.json();
+    const { description, price, amount } = await request.json();
 
     const newItem = await prisma.receipt.create({
       data: {
-        name: name,
+        description: description,
         price: price,
         amount: amount,
       },

@@ -14,8 +14,8 @@ datasource db {
 }
 
 model Receipt {
-  id     Int    @id @default(autoincrement())
-  name   String
-  price  Float
-  amount Int
+  id          Int    @id @default(autoincrement())
+  description String
+  price       Float
+  amount      Int
 }

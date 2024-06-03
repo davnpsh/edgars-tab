@@ -26,7 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
-  name: z.string().min(2).max(50),
+  description: z.string().min(2).max(50),
   price: z.coerce.number().gte(0),
   amt: z.coerce.number().gte(0),
 });
@@ -46,7 +46,7 @@ export default function NewItem() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      description: "",
       price: 0,
       amt: 0,
     },
@@ -77,10 +77,10 @@ export default function NewItem() {
             <div className="flex flex-row gap-2">
               <FormField
                 control={form.control}
-                name="name"
+                name="description"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
