@@ -51,9 +51,16 @@ interface ItemProps {
   description: string;
   price: number;
   amt: number;
+  signalRefresh: () => void;
 }
 
-export default function Item({ id, description, price, amt }: ItemProps) {
+export default function Item({
+  id,
+  description,
+  price,
+  amt,
+  signalRefresh,
+}: ItemProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [pressedButton, setPressedButton] = useState<ActionButton | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,10 +82,31 @@ export default function Item({ id, description, price, amt }: ItemProps) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     // Mark as pressed button
     setPressedButton(ActionButton.SUBMIT);
+
+    try {
+      const res = await fetch(`/api/receipt/item/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          description: values.description,
+          price: values.price,
+          amount: values.amt,
+        }),
+      });
+
+      if (res.ok) {
+        signalRefresh();
+      }
+    } catch (error) {
+      console.error("Error trying to update item: ", error);
+    }
+
+    setLoading(false);
+    // Release
+    setPressedButton(null);
   }
 
   function onDelete() {
@@ -112,7 +140,7 @@ export default function Item({ id, description, price, amt }: ItemProps) {
                 name="description"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -163,13 +191,13 @@ export default function Item({ id, description, price, amt }: ItemProps) {
                 onClick={() => onDelete()}
                 disabled={loading && true}
               >
-                {pressedButton === ActionButton.DELETE && (
+                {loading && pressedButton === ActionButton.DELETE && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Delete
               </Button>
               <Button type="submit" disabled={loading && true}>
-                {pressedButton === ActionButton.SUBMIT && (
+                {loading && pressedButton === ActionButton.SUBMIT && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Submit

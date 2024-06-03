@@ -21,12 +21,20 @@ export default function Receipt() {
   const [loading, setLoading] = useState<boolean>(true);
   const [items, setItems] = useState<Item[] | null>(null);
 
+  // Refresh on CRUD operations (this behaves as a signal, not a switch)
+  const [refresh, setRefresh] = useState<boolean>(false);
+  function toggleRefresh() {
+    setRefresh(!refresh);
+  }
+
   useEffect(() => {
     setHostname(window.location.hostname);
   }, []);
 
   // Fetch items of the receipt
   useEffect(() => {
+    setLoading(true);
+
     async function loadItems() {
       const res = await fetch("/api/receipt");
       const data = await res.json();
@@ -35,7 +43,7 @@ export default function Receipt() {
     }
 
     loadItems();
-  }, []);
+  }, [refresh]);
 
   return loading ? (
     <Loader2 className="mr-2 h-16 w-16 animate-spin" />
@@ -74,6 +82,7 @@ export default function Receipt() {
                 description={item.description}
                 price={item.price}
                 amt={item.amount}
+                signalRefresh={toggleRefresh}
               />
             ))}
             {/* - END - ITEM ROWS */}
