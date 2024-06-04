@@ -1,0 +1,10 @@
+services:
+  app:
+    image: edgars-tab:latest
+    ports:
+      - "3000:3000"
+    environment:
+      # postgresql string connection to database
+      - DATABASE_URL=${DATABASE_URL}
+      # openssl string
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
