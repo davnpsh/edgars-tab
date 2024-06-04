@@ -19,3 +19,9 @@ model Receipt {
   price       Float
   amount      Int
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
