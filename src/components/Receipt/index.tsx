@@ -73,8 +73,8 @@ export default function Receipt({ printing }: ReceiptProps) {
       }}
     >
       <div className="title text-center py-6">
-        <h2 className="text-4xl font-bold mb-2">DEBTS</h2>
-        <h3 className="">EVERYTHING EDGAR WILL PAY FOR</h3>
+        <h2 className="text-4xl font-bold mb-2">Edgar&apos;s tab</h2>
+        <h3 className="">REMINDER OF EDGAR&apos;S DEBTS</h3>
       </div>
 
       <div className={cn([merchant_copy.className, "text-2xl"])}>
@@ -126,7 +126,7 @@ export default function Receipt({ printing }: ReceiptProps) {
         <p>CARDHOLDER: EDGAR</p>
 
         <div className="flex flex-col items-center">
-          <p className="py-4">REMEMBER TO PAY YOUR DEBTS!</p>
+          <p className="py-4">Thank you for your purchase!</p>
           <Image src={barcode} alt="barcode" className="w-2/3" />
           <p>{hostname}</p>
         </div>
